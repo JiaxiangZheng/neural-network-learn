@@ -9,11 +9,11 @@ class CrossEncryLossLayer {
 class LossLayer {
   constructor(type) {
   }
-  forward(z, y) {
-    const diff = z.add(y, -1);
+  forward(Z, Y) {
+    const diff = Z.add(Y, -1);
 
     this.delta = diff;
-    this.loss = diff.map(val => val * val).sum() / 2 / z.rows;
+    this.loss = diff.map(val => val * val).sum() / 2 / Z.rows;
 
     return this.loss;
   }

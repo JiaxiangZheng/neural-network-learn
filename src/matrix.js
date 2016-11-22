@@ -27,16 +27,19 @@ class Matrix {
       this._data[i] = typeof initial !== 'undefined' ? initial : rand()
     }
   }
+
   get(i, j) {
     return this._data[this.cols * i + j];
   }
+
   set(i, j, v) {
     this._data[this.cols * i + j] = v;
   }
+
   multiply(matrix) {
     let _rows = this.rows,
-      _cols = matrix.cols,
-      out = new Matrix(_rows, _cols, 0);
+        _cols = matrix.cols,
+        out = new Matrix(_rows, _cols, 0);
     for (let i = 0; i < _rows; i++) {
       for (let j = 0; j < _cols; j++) {
         let val = 0;
