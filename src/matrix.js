@@ -88,6 +88,15 @@ class Matrix {
     }
     return out;
   }
+  sum() {
+    let sum = this._data.reduce((prev, cur) => prev + cur, 0);
+    return sum;
+  }
+  toString() {
+    let out = `(${this.rows}x${this.cols})\n`;
+    out += ('[' + this._data + ']');
+    return out;
+  }
 }
 
 export default Matrix;

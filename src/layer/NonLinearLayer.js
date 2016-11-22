@@ -43,6 +43,8 @@ class NonLinearLayer {
     let backward = this.out.map(this.activation.backward);
 
     this.delta = delta_X.dot(backward);
+
+    return this.delta;
   }
 }
 
