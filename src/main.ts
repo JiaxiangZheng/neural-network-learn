@@ -3,16 +3,17 @@
 import { rand } from './utils';
 import Matrix from './matrix';
 import Net from './net';
-import { LinearLayer, NonLinearLayer, LossLayer } from './layer'
+import { LinearLayer, NonLinearLayer, makeLossLayer } from './layer'
 
 function main() {
   const net = new Net();
 
-  net.push(new LinearLayer(2, 4));
-  net.push(new NonLinearLayer('leru'));
-  net.push(new LinearLayer(4, 1));
+  net.push(new LinearLayer(2, 3));
   net.push(new NonLinearLayer('sigmoid'));
-  net.lossLayer = new LossLayer('square');
+  net.push(new LinearLayer(3, 1));
+  net.push(new NonLinearLayer('sigmoid'));
+
+  net.setLossLayer(makeLossLayer('square'));
 
   const X = Matrix.getInstanceFromArray([
     [0, 0],
@@ -23,6 +24,7 @@ function main() {
   const Y = Matrix.getInstanceFromArray([[0], [0], [0], [1]]);
 
   net.train(X, Y);
+
   console.log(net.forward(X));
 
   return;

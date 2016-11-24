@@ -1,6 +1,10 @@
 import { rand } from './utils';
 
 class Matrix {
+  private _data: Array<number>;
+  rows: number;
+  cols: number;
+
   static getInstanceFromArray(array) {
     if (!array || !Array.isArray(array) || array.length <= 0) {
       throw new Error('invalid input, should be a two dimensional array');
@@ -19,7 +23,7 @@ class Matrix {
     return instance;
   }
 
-  constructor(m, n, initial) {
+  constructor(m: number, n: number, initial?: number) {
     this._data = new Array(m * n);
     this.rows = m;
     this.cols = n;

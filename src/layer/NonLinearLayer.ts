@@ -1,6 +1,11 @@
 import Matrix from '../matrix';
 
-const LeRU = {
+interface ActivationType {
+  forward(val: number),
+  backward(val: number)
+}
+
+const LeRU: ActivationType = {
   forward(val) {
     return val > 0 ? val : 0;
   },
@@ -9,7 +14,7 @@ const LeRU = {
   }
 }
 
-const Sigmoid = {
+const Sigmoid: ActivationType = {
   forward(val) {
     return 1 / (1 + Math.exp(-val));
   },
@@ -18,14 +23,35 @@ const Sigmoid = {
   }
 }
 
+const Tanh: ActivationType = {
+  forward(val) {
+    const exp = Math.exp(val);
+    const nexp = Math.exp(-val);
+    return exp - nexp / (exp + nexp);
+  },
+  backward(val) {
+    const exp = Math.exp(val);
+    const nexp = Math.exp(-val);
+    const diff = (exp - nexp) / (exp + nexp);
+    return 1 - diff * diff;
+  }
+}
+
 // N 为一个 batch 大小
 // 输入 m，输出 n，X 为 N * m，W 为 m * n，b 为 1 * n，I 为一个 N*1 的列向量
 // Z = X * W + I * b = N * n
 // X^1 = NonLinear(Z)
 class NonLinearLayer {
-  constructor(activation) {
+  activation: ActivationType;
+  in: any;
+  out: any;
+  delta: any;
+
+  constructor(activation: string) {
     if (activation == 'sigmoid') {
       this.activation = Sigmoid;
+    } else if (activation == 'tanh') {
+      this.activation = Tanh;
     } else {
       this.activation = LeRU;
     }
