@@ -19,7 +19,7 @@ class SquareLossLayer extends LossLayer {
     const diff = Z.add(Y, -1);
 
     this.delta = diff;
-    this.loss = diff.map(val => val * val).sum() / 2 / Z.rows;
+    this.loss = diff.dot(diff).sum() / Z.rows;
 
     return this.loss;
   }
@@ -37,7 +37,7 @@ class CrossEncryLossLayer extends LossLayer {
     const diff = Z.add(Y, -1);
 
     this.delta = diff;
-    this.loss = diff.map(val => val * val).sum() / 2 / Z.rows;
+    this.loss = diff.map(val => val * val).sum() / Z.rows;
 
     return this.loss;
   }

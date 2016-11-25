@@ -6,13 +6,13 @@ import Net from './net';
 import { LinearLayer, NonLinearLayer, makeLossLayer } from './layer'
 
 function main() {
-  const net = new Net();
+  const net = new Net({
+    learningRate: 0.3,
+    epoch:10000
+  });
 
-  net.push(new LinearLayer(2, 3));
-  net.push(new NonLinearLayer('sigmoid'));
-  net.push(new LinearLayer(3, 1));
-  net.push(new NonLinearLayer('sigmoid'));
-
+  net.addHiddenLayer({ in: 2, out: 3, activation: 'sigmoid' });
+  net.addHiddenLayer({ in: 3, out: 1, activation: 'sigmoid' });
   net.setLossLayer(makeLossLayer('square'));
 
   const X = Matrix.getInstanceFromArray([

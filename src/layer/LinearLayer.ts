@@ -9,6 +9,7 @@ class LinearLayer {
   in_size: number;
   out_size: number;
   w: Matrix;
+  change: Matrix;  // for SGD momentum
   delta: Matrix;
   b: Matrix;
 
@@ -16,6 +17,8 @@ class LinearLayer {
   constructor(m, n) {
     this.in_size = m;
     this.out_size = n;
+
+    // TODO: make w initialized as random
     this.w = new Matrix(m, n, 0.25);
     this.b = new Matrix(1, n, 0.25);
   }
@@ -30,22 +33,29 @@ class LinearLayer {
 
   // delta_Z = N * n
   backward(delta_Z) {
-    let delta_w = this.in.transpose().multiply(delta_Z) // .map(val => val / this.in.rows);
+    // delta_X
+    this.delta = delta_Z.multiply(this.w.transpose());
 
-    // regularization term
-    // const lambda = 0.1;
-    // this.delta_w = this.delta_w.add(this.w, lambda)
+    let delta_w = this.in.transpose().multiply(delta_Z);
 
     const I = new Matrix(this.in.rows, this.b.cols, 1);
-    let delta_b = delta_Z.transpose().multiply(I) // .map(val => val / this.in.rows);
+    let delta_b = delta_Z.transpose().multiply(I)
 
     const learning_rate = 0.3;
 
-    this.w = this.w.add(delta_w, -learning_rate);
     this.b = this.b.add(delta_b, -learning_rate);
 
-    // delta_X
-    this.delta = delta_Z.multiply(this.w.transpose());
+    // TODO: add momentum algorithm
+    let change = this.change;
+    delta_w = delta_w.map(val => - learning_rate * val);
+    if (change) {
+      const momentum = 0.1;
+      change = delta_w.add(change, momentum);
+    } else {
+      change = delta_w;
+    }
+    this.w = this.w.add(change);
+    this.change = change;
 
     return this.delta;
   }

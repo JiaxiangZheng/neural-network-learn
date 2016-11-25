@@ -1,3 +1,4 @@
+import * as Layers from './layer';
 import { shuffle } from './utils'
 import Matrix from './matrix'
 
@@ -12,16 +13,19 @@ interface AbstractLayer {
 
 class Net {
   layers: Array<AbstractLayer>;
+  lossLayer: LossLayerType;
+
   loss: number;
   epoch: number;
   threshold: number;
-  lossLayer: LossLayerType;
+  learningRate: number;
 
-  constructor(epoch = 20000) {
+  constructor(opts = {epoch: 20000, learningRate: 0.3}) {
     this.layers = [];
     this.loss = Math.exp(100);  // Infinity
-    this.epoch = epoch;
-    this.threshold = 0.005;
+    this.threshold = 1e-5;
+    this.epoch = opts.epoch;
+    this.learningRate = opts.learningRate;
   }
   push(layer) {
     this.layers.push(layer);
@@ -29,17 +33,21 @@ class Net {
   setLossLayer(layer) {
     this.lossLayer = layer;
   }
+  addHiddenLayer(options) {
+    this.layers.push(new Layers.LinearLayer(options.in, options.out));
+    if (options.activation) {
+      this.layers.push(new Layers.NonLinearLayer(options.activation));
+    }
+  }
   forward(X) {
     for (let i = 0; i < this.layers.length; i++) {
       const layer = this.layers[i];
       X = layer.forward(X);
     }
-
     return X;
   }
   backward(Y_, Y) {
     const len = this.layers.length;
-
     this.loss = this.lossLayer.forward(Y_, Y);
     let delta = this.lossLayer.backward();
 
@@ -53,13 +61,11 @@ class Net {
     if (X.rows < batch_size) {
       batch_size = X.rows;
     }
-    for (let i = 0; i < this.epoch && this.loss < this.threshold; i++) {
-      const data = this.batchPick({ X, Y }, batch_size);
 
+    for (let i = 0; i < this.epoch && this.loss > this.threshold; i++) {
+      const data = this.batchPick({ X, Y }, batch_size);
       let newY = this.forward(data.X);
       this.backward(newY, data.Y);
-
-      if (i % 100 == 0) console.log(i, this.loss);
     }
   }
   batchPick(data, batch_size) {

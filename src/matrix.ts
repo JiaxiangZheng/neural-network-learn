@@ -67,8 +67,7 @@ class Matrix {
     }
     return out;
   }
-  add(matrix, scale) {
-    if (typeof scale === 'undefined') scale = 1.0;
+  add(matrix, scale = 1) {
     let out = new Matrix(this.rows, this.cols, 0);
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
