@@ -12,7 +12,7 @@ function main() {
   });
 
   net.addHiddenLayer({ in: 2, out: 3, activation: 'sigmoid' });
-  net.addHiddenLayer({ in: 3, out: 1, activation: 'sigmoid' });
+  net.addHiddenLayer({ in: 3, out: 1, activation: 'tanh' });
   net.setLossLayer(makeLossLayer('square'));
 
   const X = Matrix.getInstanceFromArray([
@@ -21,7 +21,7 @@ function main() {
     [1, 0],
     [1, 1]
   ]);
-  const Y = Matrix.getInstanceFromArray([[1], [0], [0], [1]]);
+  const Y = Matrix.getInstanceFromArray([[0], [1], [1], [1]]);
 
   net.train(X, Y);
 

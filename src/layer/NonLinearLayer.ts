@@ -25,15 +25,11 @@ const Sigmoid: ActivationType = {
 
 const Tanh: ActivationType = {
   forward(val) {
-    const exp = Math.exp(val);
-    const nexp = Math.exp(-val);
-    return exp - nexp / (exp + nexp);
+    return 2 * Sigmoid.forward(2 * val) - 1
   },
   backward(val) {
-    const exp = Math.exp(val);
-    const nexp = Math.exp(-val);
-    const diff = (exp - nexp) / (exp + nexp);
-    return 1 - diff * diff;
+    const forward_val = Tanh.forward(val);
+    return 1 - forward_val * forward_val;
   }
 }
 
