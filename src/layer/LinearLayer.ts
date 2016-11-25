@@ -19,8 +19,8 @@ class LinearLayer {
     this.out_size = n;
 
     // TODO: make w initialized as random
-    this.w = new Matrix(m, n, 0.25);
-    this.b = new Matrix(1, n, 0.25);
+    this.w = new Matrix(m, n);
+    this.b = new Matrix(1, n, 0);
   }
 
   forward(X) {

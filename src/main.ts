@@ -21,7 +21,7 @@ function main() {
     [1, 0],
     [1, 1]
   ]);
-  const Y = Matrix.getInstanceFromArray([[0], [0], [0], [1]]);
+  const Y = Matrix.getInstanceFromArray([[1], [0], [0], [1]]);
 
   net.train(X, Y);
 
